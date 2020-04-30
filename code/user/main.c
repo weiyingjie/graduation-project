@@ -91,8 +91,13 @@ int main(void)
 			}
 		}
 		
-		// 获取mq5的值
+		// 获取mq5的值	常态是2000±	判断高于3500为有易燃气体泄漏
 		mq5_value = mq5_get_value();
+		if(mq5_value > 3500) {
+			buzzer_on();
+		} else {
+			buzzer_off();
+		}
 		
 		// 数码管显示
 		while(i--)
