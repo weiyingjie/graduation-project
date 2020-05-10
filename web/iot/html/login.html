@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <!-- 引入样式 -->
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <!--        导航栏-->
+        <el-header>
+            <el-menu
+                    :default-active="activeIndex"
+                    class="el-menu-topbar"
+                    mode="horizontal"
+                    @select="handleSelect"
+                    background-color="#545c64"
+                    text-color="#fff"
+                    active-text-color="#ffd04b">
+                <el-row type="flex" class="row-bg" justify="center">
+                    <el-col :span="3">
+                        <el-menu-item index="1">首页</el-menu-item>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-menu-item index="2">控制台</el-menu-item>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-menu-item index="3">登录</el-menu-item>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-menu-item index="4">注册</el-link></el-menu-item>
+                    </el-col>
+                </el-row>
+            </el-menu>
+
+        </el-header>
+        <!--        主体-->
+        <el-main>
+            <!--            注册表单-->
+            <div id="register_form">
+                <div class="login_text"><h1>{{ login_text }}</h1></div>
+                <hr>
+                <el-form status-icon :model="ruleForm" :rules="rules"
+                         hide-required-asterisk
+                         ref="ruleForm" class="demo-ruleForm">
+                    <el-form-item prop="email">
+                        <el-input v-model="ruleForm.email" placeholder="请输入邮箱账号" prefix-icon="el-icon-user"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="passwd">
+                        <el-input type="password" v-model="ruleForm.passwd" placeholder="请输入密码"
+                                  prefix-icon="el-icon-lock" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </el-main>
+    </el-container>
+</div>
+
+<!--vue-->
+<script src="../lib/vue.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/vue-resource/1.5.1/vue-resource.js"></script>
+<!--jQuery-->
+<script src="../lib/jquery-3.1.1.js"></script>
+<!--axios-->
+<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.js"></script>
+<!-- 引入组件库 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.13.1/index.js"></script>
+
+<script type="module">
+    import MD5 from '../lib/md5.js' // md5
+    var validatePass = (rule, value, callback) => {
+        if (value === '') {
+            callback(new Error('请输入密码'));
+        } else {
+            callback();
+        }
+    };
+
+    let app = new Vue({
+        el: '#app',
+        data: {
+            // 导航栏默认标签
+            activeIndex: '3',
+            login_text: '登录',
+            // 表单规则
+            ruleForm: {
+                email: '',
+                passwd: '',
+            },
+            rules: {
+                email: [
+                    {required: true, message: '请输入邮箱地址', trigger: 'blur'},
+                    {type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change']}
+                ],
+                passwd: [
+                    {validator: validatePass, trigger: 'blur'}
+                ],
+            },
+        },
+        methods: {
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+                switch (key) {
+                    case "1":
+                        // 首页
+                        console.log("首页");
+                        window.location.href = "./index.html";
+                        break;
+                    case "2":
+                        // 控制台
+                        console.log("我的设备");
+                        window.location.href = "./control.html";
+                        break;
+                    case "3":
+                        // 登录
+                        console.log("登录");
+                        window.location.reload();
+                        break;
+                    case "4":
+                        // 注册
+                        console.log("注册");
+                        window.location.href = "./register.html";
+                        break;
+                }
+            },
+
+            // 提交表单
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        this.passValue(); // 传给PHP页面
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+
+            // 给PHP页面传值
+            passValue() {
+                let passwd = this.ruleForm.passwd;
+                let email = this.ruleForm.email;
+                passwd = MD5.MD5(passwd);
+                this.$http.post("../php/login.php", {passwd: passwd, email: email},
+                    {emulateJSON: true}).then(function (response) {
+                    let ret = response.bodyText; // {code: 1, email: 1, passwd: 1}
+                    ret = JSON.parse(ret);
+                    let str = '';
+                    if (ret['code'] === 1) {
+                        if (ret['email'] === 1)
+                            str = '账号不存在！';
+                        if (ret['passwd'] === 1)
+                            str = '密码错误！';
+                        this.msg_err(str);
+                    } else {
+                        this.scrollTop();
+                        str = '登录成功！';
+                        this.msg_ok(str);
+                        // 3s之后跳转
+                        window.setTimeout(
+                            function () {
+                                window.location.href = './control.html';
+                            }, 1000);
+                    }
+                    console.log(ret);
+                }, function () {
+                    console.log('error');
+                });
+            },
+
+            // 成功消息
+            msg_ok(msg) {
+                this.$message({
+                    showClose: true,
+                    message: msg,
+                    type: 'success',
+                    offset: '50'
+                });
+            },
+
+            // 失败消息
+            msg_err(msg) {
+                this.$message({
+                    showClose: true,
+                    message: msg,
+                    type: 'error',
+                    offset: '50'
+                });
+            },
+
+            // 返回顶部
+            scrollTop() {
+                if ((document.body.scrollTop || document.documentElement.scrollTop) !== 0) {
+                    document.body.scrollTop = document.documentElement.scrollTop = 0;
+                }
+            }
+        }
+    });
+
+</script>
+</body>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    html, body {
+        height: 100%;
+        width: 100%;
+    }
+
+    /*隐藏滚动条*/
+    ::-webkit-scrollbar {
+        width: 0 !important;
+        height: 0;
+    }
+
+    #app {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background-image: url(../images/louis-reed-zDxlNcdUzxk-unsplash.jpg);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        overflow: hidden;
+        transform: scale(1.0);
+        z-index: -10;
+    }
+
+    .el-menu {
+        height: 60px;
+        filter: alpha(Opacity=90);
+        -moz-opacity: 0.9;
+        opacity: 0.9;
+    }
+
+    .el-menu-item {
+        text-align: center;
+    }
+
+    .el-header {
+        text-align: center;
+        /*height: 10%;*/
+        padding: 0;
+    }
+
+    .el-main {
+        padding: 0;
+        /*height: 60%;*/
+    }
+
+    #register_form {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, .7), 0 0 6px rgba(0, 0, 0, .04);
+        height: 100%;
+        width: 19%;
+        margin-left: 70%;
+        margin-top: 1px;
+        padding: 110px 80px;
+        background-color: white;
+        filter: alpha(Opacity=95);
+        -moz-opacity: 0.95;
+        opacity: 0.95;
+    }
+
+    .login_text, hr {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .el-button {
+        margin-top: 50px;
+        width: 100%;
+    }
+</style>
+</html>

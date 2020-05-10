@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="vue" level="application" />
+    <orderEntry type="library" name="jquery-3.1.1" level="application" />
+    <orderEntry type="library" name="axios" level="application" />
+    <orderEntry type="library" name="vue-resource" level="application" />
+    <orderEntry type="library" name="element-ui" level="application" />
+    <orderEntry type="library" name="md5" level="application" />
+  </component>
+</module>

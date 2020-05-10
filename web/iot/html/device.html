@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>设备</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../lib/element-ui.css">
+</head>
+
+<body>
+    <div id="app">
+        <el-button type="success" v-on:click="get_s_data">成功按钮</el-button>
+        {$_SESSION['device']}
+        {{ s_data }}
+<!--        <input type="button" value="请求按钮" v-on:click="get_s_data">-->
+    </div>
+
+</body>
+<!--vue-->
+<script src="../lib/vue.js"></script>
+<!--jQuery-->
+<script src="../lib/jquery-3.1.1.js"></script>
+<!--axios-->
+<script src="../lib/axios.js"></script>
+<!-- 引入组件库 -->
+<script src="../lib/element-ui_lib_index.js"></script>
+<script>
+
+    let app = new Vue({
+        el: '#app',
+        data: {
+            s_data: "data"
+        },
+        methods: {
+            get_s_data: function () {
+                let that = this;
+                this.$http.post("../php/device.php", {d_id: 1, s_id: 1},
+                    {emulateJSON: true}).then(function (response) {
+                    // response.bodyText可以显示后台查询数据库得到的{"data":12}
+                    let sensor_data = response.bodyText;
+                    // sensor_data = JSON.parse(sensor_data);
+                    // that.s_data = sensor_data['data'];
+                    console.log(sensor_data);
+                }, function () {
+                    console.log('error');
+                });
+            }
+        },
+        mounted() {
+            // 3s刷新一次数据
+            this.$nextTick(() => {
+                setInterval(this.get_s_data, 3000);
+            })
+        }
+    });
+
+</script>
+
+</html>

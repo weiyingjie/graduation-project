@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>物联网云平台</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-header>
+            <el-menu
+                    :default-active="activeIndex"
+                    class="el-menu-topbar"
+                    mode="horizontal"
+                    @select="handleSelect"
+                    background-color="#545c64"
+                    text-color="#fff"
+                    active-text-color="#ffd04b">
+                <el-row type="flex" class="row-bg" justify="center">
+                    <el-col :span="3">
+                        <el-menu-item index="1">首页</el-menu-item>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-menu-item index="2">控制台</el-menu-item>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-menu-item index="3">登录</el-menu-item>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-menu-item index="4">注册</el-link></el-menu-item>
+                    </el-col>
+                </el-row>
+            </el-menu>
+
+        </el-header>
+        <el-main>Main</el-main>
+        <el-footer>Footer</el-footer>
+    </el-container>
+</div>
+
+<!--vue-->
+<script src="../lib/vue.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/vue-resource/1.5.1/vue-resource.js"></script>
+<!--jQuery-->
+<script src="../lib/jquery-3.1.1.js"></script>
+<!--axios-->
+<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.js"></script>
+<!-- 引入组件库 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.13.1/index.js"></script>
+<script type="module">
+    let app = new Vue({
+        el: '#app',
+        data: {
+            activeIndex: '1',
+        },
+        methods: {
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+                switch (key) {
+                    case "1":
+                        // 首页
+                        console.log("首页");
+                        window.location.reload();
+                        break;
+                    case "2":
+                        // 控制台
+                        console.log("我的设备");
+                        window.location.href = "./control.html";
+                        break;
+                    case "3":
+                        // 登录
+                        console.log("登录");
+                        window.location.href = "./login.html";
+                        break;
+                    case "4":
+                        // 注册
+                        console.log("注册");
+                        window.location.href = "./register.html";
+                        break;
+                }
+            },
+        }
+    });
+</script>
+</body>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        height: 100%;
+    }
+
+    .el-menu-item {
+        text-align: center;
+    }
+
+    .el-header, .el-footer {
+        background-color: #B3C0D1;
+        color: #333;
+        text-align: center;
+        height: 10%;
+        padding: 0 0;
+    }
+
+    .el-main {
+        background-color: #E9EEF3;
+        color: #333;
+        text-align: center;
+        height: 80%;
+    }
+</style>
+</html>

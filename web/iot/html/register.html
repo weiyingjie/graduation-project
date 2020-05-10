@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app" :class="[isActive?'app1':'app2']">
+    <el-container>
+        <!--        导航栏-->
+        <el-header>
+            <el-menu
+                    :default-active="activeIndex"
+                    class="el-menu-topbar"
+                    mode="horizontal"
+                    @select="handleSelect"
+                    background-color="#545c64"
+                    text-color="#fff"
+                    active-text-color="#ffd04b">
+                <el-row type="flex" class="row-bg" justify="center">
+                    <el-col :span="3">
+                        <el-menu-item index="1">首页</el-menu-item>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-submenu index="2">
+                            <template slot="title">控制台</template>
+                            <el-menu-item index="2-1">我的设备</el-menu-item>
+                            <el-menu-item index="2-2">个人中心</el-menu-item>
+                        </el-submenu>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-menu-item index="3">登录</el-menu-item>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-menu-item index="4">注册</el-link></el-menu-item>
+                    </el-col>
+                </el-row>
+            </el-menu>
+
+        </el-header>
+        <!--        主体-->
+        <el-main>
+            <!--            注册表单-->
+            <div id="register_form">
+                <el-form status-icon :model="ruleForm" :rules="rules" :label-position="labelPosition"
+                         hide-required-asterisk
+                         ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                    <el-form-item label="邮箱账号" prop="email">
+                        <el-input v-model="ruleForm.email" placeholder="请输入邮箱账号" v-on:focus="change"
+                                  v-on:blur="change"></el-input>
+                    </el-form-item>
+                    <el-form-item label="昵称" prop="name">
+                        <el-input v-model="ruleForm.name" placeholder="请输入昵称" v-on:focus="change"
+                                  v-on:blur="change"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码" prop="passwd">
+                        <el-input type="password" v-model="ruleForm.passwd" placeholder="请输入密码" v-on:focus="change"
+                                  v-on:blur="change" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码" prop="passwd2">
+                        <el-input type="password" v-model="ruleForm.passwd2" placeholder="请确认密码" v-on:focus="change"
+                                  v-on:blur="change" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                        <el-button @click="resetForm('ruleForm')">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </el-main>
+        <el-footer>Footer</el-footer>
+    </el-container>
+</div>
+
+<!--vue-->
+<script src="../lib/vue.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/vue-resource/1.5.1/vue-resource.js"></script>
+<!--jQuery-->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.js"></script>
+<!--axios-->
+<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.js"></script>
+<!-- 引入组件库 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.13.1/index.js"></script>
+<script type="module">
+    import MD5 from '../lib/md5.js' // md5
+
+    let app = new Vue({
+        el: '#app',
+        data() {
+            var validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入密码'));
+                } else {
+                    if (this.ruleForm.passwd2 !== '') {
+                        this.$refs.ruleForm.validateField('passwd2');
+                    }
+                    callback();
+                }
+            };
+            var validatePass2 = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入密码'));
+                } else if (value !== this.ruleForm.passwd) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                // 导航栏默认标签
+                activeIndex: '4',
+                // 页面默认style
+                isActive: true,
+                // 表单规则
+                ruleForm: {
+                    email: '',
+                    name: '',
+                    passwd: '',
+                    passwd2: '',
+                },
+                rules: {
+                    email: [
+                        {required: true, message: '请输入邮箱地址', trigger: 'blur'},
+                        {type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change']}
+                    ],
+                    name: [
+                        {required: true, message: '请输入昵称', trigger: 'blur'},
+                        {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+                    ],
+                    passwd: [
+                        {validator: validatePass, trigger: 'blur'}
+                    ],
+                    passwd2: [
+                        {validator: validatePass2, trigger: 'blur'}
+                    ]
+                },
+                labelPosition: 'top',
+            };
+
+        },
+        methods: {
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+                switch (key) {
+                    case "1":
+                        // 首页
+                        console.log("首页");
+                        window.location.href = "./index.html";
+                        break;
+                    case "2-1":
+                        // 我的设备
+                        console.log("我的设备");
+                        window.location.href = "../php/sensor.php";
+                        break;
+                    case "2-2":
+                        // 个人中心
+                        console.log("个人中心");
+                        break;
+                    case "3":
+                        // 登录
+                        console.log("登录");
+                        window.location.href="./login.html";
+                        break;
+                    case "4":
+                        // 注册
+                        console.log("注册");
+                        window.location.reload();
+                        break;
+                }
+            },
+
+            // 改变页面style
+            change: function () {
+                // 更改页面style
+                this.isActive = !this.isActive;
+            },
+
+            // 提交表单
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        this.passValue(); // 传给PHP页面
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+
+            // 清空表单
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            },
+
+            // 给PHP页面传值
+            passValue() {
+                let passwd = this.ruleForm.passwd2;
+                let name = this.ruleForm.name;
+                let email = this.ruleForm.email;
+                passwd = MD5.MD5(passwd);
+                this.$http.post("../php/register.php", {passwd: passwd, name: name, email: email},
+                    {emulateJSON: true}).then(function (response) {
+                    let ret = response.bodyText; // {code: 1, email: 1, name: 1}
+                    ret = JSON.parse(ret);
+                    let str = '';
+                    if (ret['code'] === 1) {
+                        if (ret['email'] === 1)
+                            str += '邮箱已被注册！';
+                        if (ret['name'] === 1)
+                            str += '昵称已被使用！';
+                        this.msg_err(str);
+                    } else {
+                        this.scrollTop();
+                        str = '恭喜，注册成功！正在跳转至登录界面';
+                        this.msg_ok(str);
+                        // 3s之后跳转
+                        window.setTimeout(
+                            function(){
+                                window.location.href = './login.html';
+                                }, 3000);
+                    }
+                    console.log(ret);
+
+                }, function () {
+                    console.log('error');
+                });
+            },
+
+            // 成功消息
+            msg_ok(msg) {
+                this.$message({
+                    showClose: true,
+                    message: msg,
+                    type: 'success',
+                    offset: '50'
+                });
+            },
+
+            // 失败消息
+            msg_err(msg) {
+                this.$message({
+                    showClose: true,
+                    message: msg,
+                    type: 'error',
+                    offset: '50'
+                });
+            },
+
+            // 返回顶部
+            scrollTop() {
+                if ((document.body.scrollTop || document.documentElement.scrollTop) !== 0) {
+                    document.body.scrollTop = document.documentElement.scrollTop = 0;
+                }
+            }
+        }
+    });
+
+</script>
+</body>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    /*隐藏滚动条*/
+    ::-webkit-scrollbar {
+        width: 0 !important;
+        height: 0;
+    }
+
+    .app1 {
+        margin: 0;
+        padding: 0;
+        background-image: url(../images/bg.jpg);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        overflow: hidden;
+        transform: scale(1.0);
+        transition: all .8s;
+        z-index: -10;
+    }
+
+    .app2 {
+        margin: 0;
+        padding: 0;
+        background-image: url(../images/bg.jpg);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        overflow: hidden;
+        transform: scale(1.2);
+        transition: all .8s;
+        z-index: -10;
+    }
+
+    .app2:after {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: inherit;
+        filter: blur(3px);
+        z-index: -10;
+        overflow: hidden;
+        transform: scale(1.22);
+        transition: all .8s;
+    }
+
+    .el-menu {
+        height: 60px;
+        filter: alpha(Opacity=90);
+        -moz-opacity: 0.9;
+        opacity: 0.9;
+    }
+
+    .el-menu-item {
+        text-align: center;
+    }
+
+    .el-header, .el-footer {
+        text-align: center;
+        height: 40px;
+        padding: 0;
+    }
+
+    .el-main {
+        padding: 0;
+        /*filter: blur(3px);*/
+    }
+
+    #register_form {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, .7), 0 0 6px rgba(0, 0, 0, .04);
+        border-radius: 8px;
+        height: 600px;
+        width: 30%;
+        margin: 100px auto;
+        padding: 60px 80px;
+        background-color: white;
+        filter: alpha(Opacity=90);
+        -moz-opacity: 0.9;
+        opacity: 0.9;
+    }
+
+    .el-button {
+        margin-top: 50px;
+    }
+</style>
+</html>
