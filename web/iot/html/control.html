@@ -65,7 +65,7 @@
                 <div class="page-header" v-show="page_header">
                     <div>我的位置 > {{ page_name }}</div>
                 </div>
-                <router-view></router-view>
+                <router-view style="overflow-x: hidden;"></router-view>
             </el-main>
         </el-container>
     </el-container>
@@ -73,27 +73,28 @@
 
 
 <script type="text/x-template" id="home">
-    <el-row :gutter="60" class="home-row">
-        <el-col :span="6" :offset="6" class="home-col">
-            <div class="home-card">
-                <div class="home-card-img"><img src="../images/home-img-device.svg"></img></div>
-                <div class="home-card-text">
-                    <div>{{ title1 }}</div>
-                    <div>{{ devices }}</div>
+    <div style="height: 80%">
+        <el-row :gutter="60" class="home-row">
+            <el-col :span="6" :offset="6" class="home-col">
+                <div class="home-card">
+                    <div class="home-card-img"><img src="../images/home-img-device.svg"></img></div>
+                    <div class="home-card-text">
+                        <div>{{ title1 }}</div>
+                        <div>{{ devices }}</div>
+                    </div>
                 </div>
-            </div>
-        </el-col>
-        <el-col :span="6" class="home-col">
-            <div class="home-card">
-                <div class="home-card-img"><img src="../images/home-img-sensor.svg"></img></div>
-                <div class="home-card-text">
-                    <div>{{ title2 }}</div>
-                    <div>{{ sensors }}</div>
+            </el-col>
+            <el-col :span="6" class="home-col">
+                <div class="home-card">
+                    <div class="home-card-img"><img src="../images/home-img-sensor.svg"></img></div>
+                    <div class="home-card-text">
+                        <div>{{ title2 }}</div>
+                        <div>{{ sensors }}</div>
+                    </div>
                 </div>
-            </div>
-        </el-col>
-    </el-row>
-
+            </el-col>
+        </el-row>
+    </div>
 </script>
 
 <script type="text/x-template" id="devices">
@@ -257,7 +258,51 @@
 </script>
 
 <script type="text/x-template" id="his_data">
-
+    <div style="height: 88%;">
+        <div class="radio">
+            <div style="padding-top: 6px; margin-right: 30px">选择设备号:</div>
+            <el-radio-group v-model="radio" size="medium" v-for="v in this.d_id" @change="getHistory">
+                <el-radio-button :label="v"></el-radio-button>
+            </el-radio-group>
+        </div>
+        <div class="history">
+            <el-table
+                    :data="tableData.filter(data => !search || data.s_name.toLowerCase().includes(search.toLowerCase()))"
+                    height="100%"
+                    border
+                    style="width: 100%">
+                <el-table-column
+                        prop="d_id"
+                        label="设备号"
+                        width="160">
+                </el-table-column>
+                <el-table-column
+                        prop="s_name"
+                        label="传感器名称"
+                        width="230">
+                </el-table-column>
+                <el-table-column
+                        prop="s_data"
+                        label="传感器数据"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="time"
+                        label="上传时间"
+                        width="300">
+                </el-table-column>
+                <el-table-column
+                        align="right">
+                    <template slot="header" slot-scope="scope">
+                        <el-input
+                                v-model="search"
+                                size="mini"
+                                placeholder="输入关键字搜索"/>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+    </div>
 </script>
 
 <script type="text/x-template" id="info">
@@ -265,7 +310,47 @@
 </script>
 
 <script type="text/x-template" id="modify">
-
+    <div class="modify">
+        <div class="radio1">
+            <el-radio-group v-model="radio1" @change="change">
+                <el-radio-button label="修改昵称"></el-radio-button>
+                <el-radio-button label="修改密码"></el-radio-button>
+            </el-radio-group>
+        </div>
+        <div class="form">
+            <el-form status-icon :model="ruleForm" :rules="rules" :label-position="labelPosition"
+                     hide-required-asterisk
+                     ref="ruleForm" label-width="100px" class="demo-ruleForm" v-if="this.isName">
+                <el-form-item label="昵称" prop="name">
+                    <el-input v-model="ruleForm.name" placeholder="请输入昵称"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                    <el-button @click="resetForm('ruleForm')">重置</el-button>
+                </el-form-item>
+            </el-form>
+            <el-form status-icon :model="ruleForm" :rules="rules" label-position="right"
+                     hide-required-asterisk ref="ruleForm2"
+                     label-width="100px" class="demo-ruleForm" v-else-if="!this.isName">
+                <el-form-item label="原密码" prop="oldpass">
+                    <el-input type="password" v-model="ruleForm.oldpass" placeholder="请输入密码"
+                              autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="新密码" prop="newpass">
+                    <el-input type="password" v-model="ruleForm.newpass" placeholder="请输入密码"
+                              autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="确认密码" prop="newpass2">
+                    <el-input type="password" v-model="ruleForm.newpass2" placeholder="请确认密码"
+                              autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                    <el-button @click="resetForm('ruleForm')">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </div>
 </script>
 
 <script type="module">
@@ -430,7 +515,7 @@
                 rules: {
                     name: [
                         {required: true, message: '请输入传感器名称', trigger: 'blur'},
-                        {min: 5, max: 15, message: '长度在 5 到 15 个字符', trigger: 'blur'}
+                        {min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
                     ],
                     sen_type: [
                         {required: true, message: '请选择传感器类型', trigger: 'change'},
@@ -559,18 +644,22 @@
             },
 
             sensorStatus(s_id, state) {
-                let s_data;
+                let s_cmd;
                 if (state === "on")
-                    s_data = 1;
+                    s_cmd = 1;
                 else
-                    s_data = 0;
-                this.$http.post("../php/sensor.php", {code: 'updateSensor', s_id: s_id, s_data: s_data},
+                    s_cmd = 0;
+                this.$http.post("../php/sensor.php", {code: 'updateSensor', s_id: s_id, s_cmd: s_cmd},
                     {emulateJSON: true}).then(function (response) {
                     let ret = response.bodyText;
                     ret = JSON.parse(ret);
                     if (ret['status'] === "updateSensorOk") {
-                        this.getSensors();
+                        if (state === "on")
+                            app.msg_ok("开启");
+                        else
+                            app.msg_ok("关闭");
                     }
+                    this.getSensors();
                     console.log(ret);
 
                 }, function () {
@@ -587,7 +676,61 @@
     }
 
     const His_data = {
-        template: '#his_data'
+        template: '#his_data',
+        data() {
+            return {
+                tableData: [],
+                d_id: [],
+                radio: '',
+                search: ''
+            }
+        },
+        methods: {
+            getHistory(d_id) {
+                this.tableData = [];
+                this.$http.post("../php/control.php", {code: 'getHistory', d_id: d_id},
+                    {emulateJSON: true}).then(function (response) {
+                    let ret = response.bodyText;
+                    ret = JSON.parse(ret);
+                    if (ret['status'] === "getHistoryOk") {
+                        let i = 0;
+                        for (i = 0; i < ret['count']; i++) {
+                            this.tableData.push(ret[i]);
+                        }
+                    }
+                    console.log(ret);
+                    console.log('table', this.tableData);
+                }, function () {
+                    console.log('error');
+                });
+            },
+
+            getD_id() {
+                this.d_id = [];
+                let u_id = self.sessionStorage.getItem('u_id');
+                this.$http.post("../php/control.php", {code: 'getD_id', u_id: u_id},
+                    {emulateJSON: true}).then(function (response) {
+                    let ret = response.bodyText; // {"status":"getD_idOk","0":"1","1":"3","count":2}
+                    ret = JSON.parse(ret);
+                    if (ret['status'] === "getD_idOk") {
+                        for (let i = 0; i < ret['count']; i++) {
+                            this.d_id.push(ret[i]);
+                        }
+                    }
+                    console.log(ret);
+                }, function () {
+                    console.log('error');
+                });
+            }
+        },
+        mounted() {
+            this.getD_id();
+            setTimeout(() => {
+                let d_id = this.d_id[0];
+                this.radio = d_id;
+                this.getHistory(d_id);
+            }, 300);
+        }
     }
 
     const Info = {
@@ -595,7 +738,87 @@
     }
 
     const Modify = {
-        template: '#modify'
+        template: '#modify',
+        data() {
+            var validateOldPass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入原密码'));
+                } else {
+                    callback();
+                }
+            };
+            var validateNewPass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入新密码'));
+                } else {
+                    if (this.ruleForm.newpass2 !== '') {
+                        this.$refs.ruleForm.validateField('newpass2');
+                    }
+                    callback();
+                }
+            };
+            var validateNewPass2 = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入新密码'));
+                } else if (value !== this.ruleForm.newpass) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                radio1: '修改昵称',
+                isName: true,
+                // 表单规则
+                ruleForm: {
+                    name: '',
+                    oldpass: '',
+                    newpass: '',
+                    newpass2: '',
+                },
+                rules: {
+                    name: [
+                        {required: true, message: '请输入昵称', trigger: 'blur'},
+                        {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+                    ],
+                    oldpass: [
+                        {validator: validateOldPass, trigger: 'blur'}
+                    ],
+                    newpass: [
+                        {validator: validateNewPass, trigger: 'blur'}
+                    ],
+                    newpass2: [
+                        {validator: validateNewPass2, trigger: 'blur'}
+                    ]
+                },
+                labelPosition: 'top',
+            }
+        },
+        methods: {
+            change(value) {
+                if (value === '修改昵称') {
+                    this.isName = true;
+                } else {
+                    this.isName = false;
+                }
+            },
+            // 提交表单
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        // this.passValue(); // 传给PHP页面
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+
+            // 清空表单
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            },
+        }
     }
 
     // 定义路由
@@ -841,13 +1064,14 @@
     html, body {
         height: 100%;
         width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
-    /*隐藏滚动条*/
-    ::-webkit-scrollbar {
-        width: 0 !important;
-        height: 0;
-    }
+    /*body {*/
+    /*    overflow: -Scroll;*/
+    /*    overflow-x: hidden*/
+    /*}*/
 
     #app {
         margin: 0;
@@ -1019,6 +1243,39 @@
 
     .el-divider__text {
         background-color: #f9fafc;
+    }
+
+    .history {
+        overflow-y: auto;
+        overflow-x: auto;
+        height: 85%;
+    }
+
+    .radio {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        margin-left: 40px;
+        display: -webkit-flex;
+        display: flex;
+    }
+
+    .modify {
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        height: 70%;
+        width: 60%;
+        background-color: white;
+        margin: 50px auto;
+    }
+
+    .radio1 {
+        width: 28%;
+        margin: 30px auto;
+    }
+
+    .form {
+        width: 50%;
+        margin: 0 auto;
     }
 
 </style>

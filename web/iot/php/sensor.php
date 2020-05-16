@@ -8,7 +8,7 @@ if (isset($_POST['code'])) {
     if ($_POST['code'] == 'updateSensor') {
         // 更新传感器
         $ret = array('status' => 'updateSensorError');
-        $sql = 'update sensors set s_data = "' . $_POST['s_data'] . '" where s_id = "' . $_POST['s_id'] . '";';
+        $sql = 'update sensors set s_cmd = "' . $_POST['s_cmd'] . '" where s_id = "' . $_POST['s_id'] . '";';
         if ($res = query($link, $sql)) {
             $ret['status'] = 'updateSensorOk';
         }

@@ -107,6 +107,33 @@ if (isset($_POST['code'])) {
         if ($res = query($link, $sql)) {
             $ret['status'] = 'delSensorOk';
         }
+    } elseif ($_POST['code'] == 'getHistory') {
+        // 查看历史
+        $ret = array('status' => 'getHistoryError');
+        $count = 0;
+        $sql = 'select * from history where d_id = "' . $_POST['d_id'] . '" order by h_id desc limit 300;';
+        if ($res = fetchAll($link, $sql)) {
+            foreach ($res as $v) {
+                $tmp = array('d_id' => $v['d_id'], 's_id' => $v['s_id'], 's_name' => $v['s_name'], 's_data' => $v['s_data'], 'time' => $v['time']);
+                array_push($ret, $tmp);
+                $count++;
+            }
+            $ret['count'] = $count;
+            $ret['status'] = 'getHistoryOk';
+        }
+    } elseif ($_POST['code'] == 'getD_id') {
+        // 查看历史
+        $ret = array('status' => 'getD_idError');
+        $count = 0;
+        $sql = 'select d_id from devices where u_id = "' . $_POST['u_id'] . '";';
+        if ($res = fetchAll($link, $sql)) {
+            foreach ($res as $v) {
+                array_push($ret, $v['d_id']);
+                $count++;
+            }
+            $ret['count'] = $count;
+            $ret['status'] = 'getD_idOk';
+        }
     }
 
 

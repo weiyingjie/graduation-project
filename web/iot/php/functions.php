@@ -2,7 +2,7 @@
 // 连接数据库
 function dbInit()
 {
-    $link = mysqli_connect('localhost', 'root', '');
+    $link = mysqli_connect('localhost', 'root', '123456');
     //判断数据库连接是否成功，如果不成功则显示错误信息并终止脚本继续执行
     if (!$link) {
         die('连接数据库失败！' . mysqli_error());
