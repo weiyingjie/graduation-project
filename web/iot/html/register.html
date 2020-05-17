@@ -24,11 +24,7 @@
                         <el-menu-item index="1">首页</el-menu-item>
                     </el-col>
                     <el-col :span="3">
-                        <el-submenu index="2">
-                            <template slot="title">控制台</template>
-                            <el-menu-item index="2-1">我的设备</el-menu-item>
-                            <el-menu-item index="2-2">个人中心</el-menu-item>
-                        </el-submenu>
+                        <el-menu-item index="2">控制台</el-menu-item>
                     </el-col>
                     <el-col :span="3">
                         <el-menu-item index="3">登录</el-menu-item>
@@ -70,7 +66,6 @@
                 </el-form>
             </div>
         </el-main>
-        <el-footer>Footer</el-footer>
     </el-container>
 </div>
 
@@ -127,7 +122,7 @@
                     ],
                     name: [
                         {required: true, message: '请输入昵称', trigger: 'blur'},
-                        {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+                        {min: 2, max: 5, message: '长度在 2 到 5 个字符', trigger: 'blur'}
                     ],
                     passwd: [
                         {validator: validatePass, trigger: 'blur'}
@@ -146,26 +141,18 @@
                 switch (key) {
                     case "1":
                         // 首页
-                        console.log("首页");
                         window.location.href = "./index.html";
                         break;
-                    case "2-1":
-                        // 我的设备
-                        console.log("我的设备");
-                        window.location.href = "../php/sensor.php";
-                        break;
-                    case "2-2":
-                        // 个人中心
-                        console.log("个人中心");
+                    case "2":
+                        // 控制台
+                        window.location.href = "./control.html";
                         break;
                     case "3":
                         // 登录
-                        console.log("登录");
                         window.location.href="./login.html";
                         break;
                     case "4":
                         // 注册
-                        console.log("注册");
                         window.location.reload();
                         break;
                 }
@@ -321,7 +308,7 @@
         text-align: center;
     }
 
-    .el-header, .el-footer {
+    .el-header {
         text-align: center;
         height: 40px;
         padding: 0;

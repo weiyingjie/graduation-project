@@ -33,19 +33,17 @@
                     text-color="#fff"
                     active-text-color="#ffd04b">
                 <el-menu-item index="1">
-                    <template slot="title"><i class="el-icon-message"></i>首页</template>
+                    <template slot="title"><i class="el-icon-s-home"></i>主页</template>
                 </el-menu-item>
                 <el-menu-item index="2">
-                    <template slot="title"><i class="el-icon-menu"></i>我的设备</template>
+                    <template slot="title"><i class="el-icon-cpu"></i>我的设备</template>
                 </el-menu-item>
                 <el-menu-item index="3">
-                    <template slot="title"><i class="el-icon-menu"></i>历史数据</template>
+                    <template slot="title"><i class="el-icon-alarm-clock"></i>历史数据</template>
                 </el-menu-item>
-                <el-submenu index="4">
-                    <template slot="title"><i class="el-icon-setting"></i>个人中心</template>
-                    <el-menu-item index="4-1">我的信息</el-menu-item>
-                    <el-menu-item index="4-2">修改信息</el-menu-item>
-                </el-submenu>
+                <el-menu-item index="4">
+                    <template slot="title"><i class="el-icon-edit-outline"></i>修改信息</template>
+                </el-menu-item>
             </el-menu>
         </el-aside>
         <el-container>
@@ -53,8 +51,6 @@
                 <el-dropdown @command="handleCommand">
                     <i class="el-icon-setting" style="margin-right: 15px"></i>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="show">查看</el-dropdown-item>
-                        <el-dropdown-item command="add">新增</el-dropdown-item>
                         <el-dropdown-item command="logout">注销</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -108,7 +104,7 @@
             </el-col>
         </el-row>
         <el-row :gutter="20" class="device-row">
-            <el-col :span="6" v-for="v in devices" class="device-col">
+            <el-col :span="6" v-for="(v, index) in devices" class="device-col" :key="index">
                 <div class="device-card">
                     <div class="device-top">
                         <div class="device-card-img"><img src="../images/device-img.svg"></div>
@@ -163,7 +159,7 @@
             </el-col>
         </el-row>
         <el-divider></el-divider>
-        <div class="sensor-device" v-for="v in device">
+        <div class="sensor-device" v-for="(v, index) in device" :key="index">
             <div class="sensor-device-img"><img src="../images/device-img.svg"></div>
             <div class="sensor-device-text">
                 <div style="padding-bottom: 15px;">名称: {{ v.d_name }}</div>
@@ -175,7 +171,7 @@
         <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
         <!--显示该设备的所有传感器-->
         <el-row :gutter="20" class="sensor-row">
-            <el-col :span="6" v-for="v in sensors" class="sensor-col">
+            <el-col :span="6" v-for="(v, index) in sensors" :key="index" class="sensor-col">
                 <!--数值类传感器-->
                 <div class="sensor-card" v-if="v.isData">
                     <div class="sensor-top">
@@ -187,12 +183,11 @@
                         </div>
                     </div>
                     <div class="sensor-bottom">
-                        <el-button type="primary" round size="small" @click="deviceInfo(v.d_id)">修改信息</el-button>
                         <el-popconfirm
                                 title="确定删除吗？"
                                 @onConfirm="delSensor(v.s_id)"
                         >
-                            <el-button type="danger" icon="el-icon-delete" circle size="small"
+                            <el-button type="danger" icon="el-icon-delete" size="small"
                                        slot="reference"></el-button>
                         </el-popconfirm>
 
@@ -219,13 +214,11 @@
                     </div>
                     <div class=" sensor-bottom
                                 ">
-                        <el-button type="primary" round size="small" @click="sensorInfo(v.d_id)">修改信息
-                        </el-button>
                         <el-popconfirm
                                 title="确定删除吗？"
                                 @onConfirm="delSensor(v.s_id)"
                         >
-                            <el-button type="danger" icon="el-icon-delete" circle size="small"
+                            <el-button type="danger" icon="el-icon-delete" size="small"
                                        slot="reference"></el-button>
                         </el-popconfirm>
 
@@ -305,10 +298,6 @@
     </div>
 </script>
 
-<script type="text/x-template" id="info">
-
-</script>
-
 <script type="text/x-template" id="modify">
     <div class="modify">
         <div class="radio1">
@@ -317,38 +306,42 @@
                 <el-radio-button label="修改密码"></el-radio-button>
             </el-radio-group>
         </div>
-        <div class="form">
-            <el-form status-icon :model="ruleForm" :rules="rules" :label-position="labelPosition"
+        <div class="form1" v-if="this.isName">
+            <el-form status-icon :model="ruleForm1" :rules="rules1" :label-position="labelPosition"
                      hide-required-asterisk
-                     ref="ruleForm" label-width="100px" class="demo-ruleForm" v-if="this.isName">
+                     ref="ruleForm1" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="昵称" prop="name">
-                    <el-input v-model="ruleForm.name" placeholder="请输入昵称"></el-input>
+                    <el-input v-model="ruleForm1.name" placeholder="请输入昵称"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-                    <el-button @click="resetForm('ruleForm')">重置</el-button>
+                    <el-button type="primary" @click="submitForm('ruleForm1')">提交</el-button>
+                    <el-button @click="resetForm('ruleForm1')">重置</el-button>
                 </el-form-item>
             </el-form>
-            <el-form status-icon :model="ruleForm" :rules="rules" label-position="right"
-                     hide-required-asterisk ref="ruleForm2"
-                     label-width="100px" class="demo-ruleForm" v-else-if="!this.isName">
-                <el-form-item label="原密码" prop="oldpass">
-                    <el-input type="password" v-model="ruleForm.oldpass" placeholder="请输入密码"
-                              autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="新密码" prop="newpass">
-                    <el-input type="password" v-model="ruleForm.newpass" placeholder="请输入密码"
-                              autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="确认密码" prop="newpass2">
-                    <el-input type="password" v-model="ruleForm.newpass2" placeholder="请确认密码"
-                              autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-                    <el-button @click="resetForm('ruleForm')">重置</el-button>
-                </el-form-item>
-            </el-form>
+        </div>
+        <div class="form2" v-else-if="!this.isName">
+            <div>
+                <el-form status-icon :model="ruleForm2" :rules="rules2" label-position="right"
+                         hide-required-asterisk ref="ruleForm2"
+                         label-width="100px" class="demo-ruleForm">
+                    <el-form-item label="原密码" prop="oldpass">
+                        <el-input type="password" v-model="ruleForm2.oldpass" placeholder="请输入密码"
+                                  autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="新密码" prop="newpass">
+                        <el-input type="password" v-model="ruleForm2.newpass" placeholder="请输入密码"
+                                  autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码" prop="newpass2">
+                        <el-input type="password" v-model="ruleForm2.newpass2" placeholder="请确认密码"
+                                  autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
+                        <el-button @click="resetForm('ruleForm2')">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
         </div>
     </div>
 </script>
@@ -733,10 +726,6 @@
         }
     }
 
-    const Info = {
-        template: '#info'
-    }
-
     const Modify = {
         template: '#modify',
         data() {
@@ -751,8 +740,8 @@
                 if (value === '') {
                     callback(new Error('请输入新密码'));
                 } else {
-                    if (this.ruleForm.newpass2 !== '') {
-                        this.$refs.ruleForm.validateField('newpass2');
+                    if (this.ruleForm2.newpass2 !== '') {
+                        this.$refs.ruleForm2.validateField('newpass2');
                     }
                     callback();
                 }
@@ -760,7 +749,7 @@
             var validateNewPass2 = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请再次输入新密码'));
-                } else if (value !== this.ruleForm.newpass) {
+                } else if (value !== this.ruleForm2.newpass) {
                     callback(new Error('两次输入密码不一致!'));
                 } else {
                     callback();
@@ -770,17 +759,21 @@
                 radio1: '修改昵称',
                 isName: true,
                 // 表单规则
-                ruleForm: {
+                ruleForm1: {
                     name: '',
+                },
+                rules1: {
+                    name: [
+                        {required: true, message: '请输入昵称', trigger: 'blur'},
+                        {min: 2, max: 5, message: '长度在 2 到 5 个字符', trigger: 'blur'}
+                    ]
+                },
+                ruleForm2: {
                     oldpass: '',
                     newpass: '',
                     newpass2: '',
                 },
-                rules: {
-                    name: [
-                        {required: true, message: '请输入昵称', trigger: 'blur'},
-                        {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
-                    ],
+                rules2: {
                     oldpass: [
                         {validator: validateOldPass, trigger: 'blur'}
                     ],
@@ -806,7 +799,11 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        // this.passValue(); // 传给PHP页面
+                        if (formName === 'ruleForm1') {
+                            this.modName();
+                        } else {
+                            this.modPass();
+                        }
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -818,6 +815,71 @@
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             },
+
+            modName() {
+                let name = this.ruleForm1.name;
+                let u_id = self.sessionStorage.getItem('u_id');
+                this.$http.post("../php/control.php", {code: 'modName', name: name, u_id: u_id},
+                    {emulateJSON: true}).then(function (response) {
+                    let ret = response.bodyText;
+                    ret = JSON.parse(ret);
+                    let str = '';
+                    if (ret['status'] === 'modNameOk') {
+                        str = '昵称修改成功';
+                        this.msg_ok(str);
+                        app.name = name;
+                    }
+                    console.log(ret);
+
+                }, function () {
+                    console.log('error');
+                });
+            },
+
+            modPass() {
+                let oldPass = this.ruleForm2.oldpass;
+                let newPass = this.ruleForm2.newpass2;
+                oldPass = MD5.MD5(oldPass);
+                newPass = MD5.MD5(newPass);
+                let u_id = self.sessionStorage.getItem('u_id');
+                this.$http.post("../php/control.php", {code: 'modPass', u_id: u_id, oldPass: oldPass, newPass: newPass},
+                    {emulateJSON: true}).then(function (response) {
+                    let ret = response.bodyText;
+                    ret = JSON.parse(ret);
+                    let str = '';
+                    if (ret['status'] === 'modPassOk') {
+                        str = '密码修改成功';
+                        this.msg_ok(str);
+                    } else {
+                        str = '原密码有误';
+                        this.msg_err(str);
+                    }
+                    console.log(ret);
+
+                }, function () {
+                    console.log('error');
+                });
+            },
+
+            // 成功消息
+            msg_ok(msg) {
+                this.$message({
+                    showClose: true,
+                    message: msg,
+                    type: 'success',
+                    offset: '50'
+                });
+            },
+
+            // 失败消息
+            msg_err(msg) {
+                this.$message({
+                    showClose: true,
+                    message: msg,
+                    type: 'error',
+                    offset: '50'
+                });
+            },
         }
     }
 
@@ -827,7 +889,6 @@
         {path: '/devices', component: Devices},
         {path: '/devices/info', component: DeviceInfo},
         {path: '/his_data', component: His_data},
-        {path: '/info', component: Info},
         {path: '/modify', component: Modify},
     ]
 
@@ -847,7 +908,7 @@
         router,
         data: {
             page_header: true,
-            page_name: '首页',
+            page_name: '主页',
             u_id: '',
             email: '',
             name: '',
@@ -858,10 +919,10 @@
                 console.log(key);
                 switch (key) {
                     case "1":
-                        // 首页
-                        console.log("首页");
+                        // 主页
+                        console.log("主页");
                         this.page_header = true;
-                        this.page_name = "首页";
+                        this.page_name = "主页";
                         router.push({path: '/'});
                         this.getDevicesAndSensorsNum();
                         break;
@@ -880,14 +941,7 @@
                         this.page_name = "历史数据";
                         router.push({path: '/his_data'});
                         break;
-                    case "4-1":
-                        // 我的信息
-                        console.log("我的信息");
-                        this.page_header = true;
-                        this.page_name = "我的信息";
-                        router.push({path: '/info'});
-                        break;
-                    case "4-2":
+                    case "4":
                         // 修改信息
                         console.log("修改信息");
                         this.page_header = true;
@@ -1173,7 +1227,7 @@
 
     .device-bottom {
         margin: 10px auto;
-        padding-left: 5px;
+        padding-left: 15px;
     }
 
     .device-card-img {
@@ -1227,7 +1281,7 @@
 
     .sensor-bottom {
         margin: 10px auto;
-        padding-left: 5px;
+        padding-left: 48px;
     }
 
     .sensor-card-img {
@@ -1273,7 +1327,12 @@
         margin: 30px auto;
     }
 
-    .form {
+    .form1 {
+        width: 50%;
+        margin: 0 auto;
+    }
+
+    .form2 {
         width: 50%;
         margin: 0 auto;
     }

@@ -134,6 +134,23 @@ if (isset($_POST['code'])) {
             $ret['count'] = $count;
             $ret['status'] = 'getD_idOk';
         }
+    } elseif ($_POST['code'] == 'modName') {
+        // 修改昵称
+        $ret = array('status' => 'modNameError');
+        $sql = 'update user set name = "' . $_POST['name'] . '" where u_id = "' . $_POST['u_id'] . '";';
+        if ($res = query($link, $sql)) {
+            $ret['status'] = 'modNameOk';
+        }
+    } elseif ($_POST['code'] == 'modPass') {
+        // 修改密码
+        $ret = array('status' => 'modPassError');
+        $sql = 'select * from user where u_id = "' . $_POST['u_id'] . '" and u_pwd = "' . $_POST['oldPass'] . '";';
+        if ($res = fetchRow($link, $sql)) {
+            $sql = 'update user set u_pwd = "' . $_POST['newPass'] . '" where u_id = "' . $_POST['u_id'] . '";';
+            if ($res = query($link, $sql)) {
+                $ret['status'] = 'modPassOk';
+            }
+        }
     }
 
 

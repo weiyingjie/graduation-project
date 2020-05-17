@@ -9,7 +9,7 @@
 <body>
 <div id="app">
     <el-container>
-        <el-header>
+        <el-header style="height: 56px">
             <el-menu
                     :default-active="activeIndex"
                     class="el-menu-topbar"
@@ -35,8 +35,21 @@
             </el-menu>
 
         </el-header>
-        <el-main>Main</el-main>
-        <el-footer>Footer</el-footer>
+        <el-main>
+            <div class="carousel">
+                <div class="text">物联网·安全·智能·云平台</div>
+                <el-carousel height="530px">
+                    <el-carousel-item v-for="(item, index) in images" :key="index">
+                        <img :src="item.src">
+                    </el-carousel-item>
+                </el-carousel>
+            </div>
+        </el-main>
+        <el-footer>
+            <div class="footer">
+                <el-link href="http://www.beian.miit.gov.cn/" style="color: #eeeeee;margin-top: 20px; font-size: 14px" :underline="false">冀ICP备19027977号-1</el-link>
+            </div>
+        </el-footer>
     </el-container>
 </div>
 
@@ -54,6 +67,12 @@
         el: '#app',
         data: {
             activeIndex: '1',
+            images: [
+                {src: '../images/hands-typing-code-on-laptop.jpg'},
+                {src: '../images/iot.jpg'},
+                {src: '../images/computer-security-lock-and-payment.jpg'},
+                {src: '../images/smart-home-3574545_1920.jpg'}
+            ]
         },
         methods: {
             handleSelect(key, keyPath) {
@@ -61,22 +80,18 @@
                 switch (key) {
                     case "1":
                         // 首页
-                        console.log("首页");
                         window.location.reload();
                         break;
                     case "2":
                         // 控制台
-                        console.log("我的设备");
                         window.location.href = "./control.html";
                         break;
                     case "3":
                         // 登录
-                        console.log("登录");
                         window.location.href = "./login.html";
                         break;
                     case "4":
                         // 注册
-                        console.log("注册");
                         window.location.href = "./register.html";
                         break;
                 }
@@ -91,8 +106,17 @@
         margin: 0;
     }
 
-    body {
+    html, body {
         height: 100%;
+        width: 100%;
+        overflow:hidden;
+    }
+
+    #app {
+        height: 100%;
+        width: 100%;
+        position:relative;
+        overflow:hidden;
     }
 
     .el-menu-item {
@@ -100,18 +124,52 @@
     }
 
     .el-header, .el-footer {
-        background-color: #B3C0D1;
-        color: #333;
+        background-color: #545c64;
+        /*color: #333;*/
         text-align: center;
-        height: 10%;
         padding: 0 0;
+        display: block;
     }
 
     .el-main {
         background-color: #E9EEF3;
-        color: #333;
+        /*color: #000000;*/
         text-align: center;
-        height: 80%;
+        height: 100%;
+        padding: 0;
+    }
+
+    .carousel {
+        height: 100%;
+        width: 100%;
+    }
+
+    img{
+        width:100%;
+        height: 100%;
+    }
+
+    .text {
+        z-index: 100;
+        height: 20%;
+        width: 70%;
+        margin-top: 100px;
+        margin-left: 200px;
+        padding-top: 15px;
+        position: fixed;
+        font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+        font-size: 80px;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.6);
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+    }
+
+    .footer {
+        height: 100%;
+        width: 100%;
+        background-color: #545c64;
+        overflow:hidden;
     }
 </style>
 </html>
