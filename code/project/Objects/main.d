@@ -32,13 +32,10 @@
 .\objects\main.o: ..\mylib\buzzer.h
 .\objects\main.o: ..\mylib\fan.h
 .\objects\main.o: ..\mylib\button.h
-.\objects\main.o: ..\mylib\eint.h
 .\objects\main.o: ..\mylib\iwdg.h
 .\objects\main.o: ..\mylib\delay.h
-.\objects\main.o: ..\mylib\usart1.h
 .\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\objects\main.o: ..\mylib\eeprom.h
 .\objects\main.o: ..\mylib\sht.h
 .\objects\main.o: ..\mylib\oled.h
 .\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
@@ -46,3 +43,7 @@
 .\objects\main.o: ..\mylib\fire.h
 .\objects\main.o: ..\mylib\ldt.h
 .\objects\main.o: ..\mylib\mq5.h
+.\objects\main.o: ..\mylib\esp8266.h
+.\objects\main.o: ..\mylib\iot.h
+.\objects\main.o: ..\mylib\rtc.h
+.\objects\main.o: ..\mylib\bitband.h

@@ -16,7 +16,7 @@ void fire_init(void) // 初始化
 
 u8 fire_get_state(void) // 获取有无火焰
 {
-	// 无火焰返回1
+	// 无火焰返回0
 	return PAIn(7);
 }
 

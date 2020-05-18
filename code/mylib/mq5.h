@@ -13,3 +13,4 @@ extern void mq5_init(void); // 初始化
 extern int mq5_get_value(void); // 获取检测的模拟量
 
 #endif
+

@@ -432,6 +432,21 @@
               <FileType>1</FileType>
               <FilePath>..\fwlib\src\stm32f10x_adc.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f10x_bkp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\fwlib\src\stm32f10x_bkp.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_pwr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\fwlib\src\stm32f10x_pwr.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\fwlib\src\stm32f10x_rtc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -458,11 +473,6 @@
               <FilePath>..\mylib\delay.c</FilePath>
             </File>
             <File>
-              <FileName>eint.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\mylib\eint.c</FilePath>
-            </File>
-            <File>
               <FileName>iwdg.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\mylib\iwdg.c</FilePath>
@@ -473,19 +483,9 @@
               <FilePath>..\mylib\usart1.c</FilePath>
             </File>
             <File>
-              <FileName>dht11.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\mylib\dht11.c</FilePath>
-            </File>
-            <File>
               <FileName>gpio_iic.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\mylib\gpio_iic.c</FilePath>
-            </File>
-            <File>
-              <FileName>eeprom.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\mylib\eeprom.c</FilePath>
             </File>
             <File>
               <FileName>sht.c</FileName>
@@ -516,6 +516,31 @@
               <FileName>mq5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\mylib\mq5.c</FilePath>
+            </File>
+            <File>
+              <FileName>esp8266.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mylib\esp8266.c</FilePath>
+            </File>
+            <File>
+              <FileName>iot.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mylib\iot.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mylib\rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>usart2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mylib\usart2.c</FilePath>
+            </File>
+            <File>
+              <FileName>relay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mylib\relay.c</FilePath>
             </File>
           </Files>
         </Group>
