@@ -19,18 +19,29 @@
 
 #define FAN_VALUE		PCOut(5)
 #define BUZZER_VALUE	PCOut(7)
-#define FAN_ID			"23"
-#define BUZZER_ID		"22"
-#define SERVER_IP		"148.70.179.241"
+
+#define WIFI_SSID	"TP-LINK_2203"
+#define WIFI_PASS	"123456789"
+#define FAN_ID		"48"
+#define BUZZER_ID	"49"
+#define TMP_ID		"50"
+#define HUM_ID		"51"
+#define MQ5_ID		"52"
+#define GAS_VALUE	2500
+#define WET_VALUE	80
+#define SERVER_IP	"148.70.179.241"
 
 static int buzzer_cmd = 0; // 云平台的指令
+static int fan_cmd = 0; // 云平台的指令
 
 void recv_handler(char *buf, int len)
 {
 	if(strstr(buf, FAN_ID)) {
 		if(strstr(buf, "true")) {
+			fan_cmd = 1;
 			fan_on();
 		} else if (strstr(buf, "false")) {
+			fan_cmd = 0;
 			fan_off();
 		}
 	} else if (strstr(buf, BUZZER_ID)) {
@@ -80,7 +91,7 @@ int main(void)
 	
 	// esp8266
 	led_on(0);
-	esp8266_link_wifi("TP-LINK_2203", "123456789");
+	esp8266_link_wifi(WIFI_SSID, WIFI_PASS);
 	delay_ms(200);
 	led_off(0);
 	
@@ -96,7 +107,7 @@ int main(void)
 		// 喂狗
 		iwdg_feed_dog();
 		
-		if(!(sht_flag || fire_flag)) {
+		if(!(sht_flag || fire_flag || mq5_value >= GAS_VALUE)) {
 			// sht30
 			sht_write_read_cmd();
 			sht_read_data(sht_data);// 获取SHT30数据			
@@ -122,7 +133,7 @@ int main(void)
 			// sht30
 			sht_write_read_cmd();
 			sht_read_data(sht_data);
-			if (sht_data[1] <= 80) {
+			if (sht_data[1] <= WET_VALUE) {
 				sht_flag = 0;
 				OLED_Clear();
 				if (fire_flag == 0 && mq5_flag == 0 && buzzer_cmd == 0)
@@ -148,10 +159,19 @@ int main(void)
 		
 		// 获取mq5的值	常态是1800±	判断高于2300为有易燃气体泄漏
 		mq5_value = mq5_get_value();
-		if(mq5_value >= 2300) {
+		if(mq5_value >= GAS_VALUE) {
+			mq5_flag = 1;
+			OLED_Clear();
+			OLED_ShowGAs(46, 3); // 显示气体
 			buzzer_on();
-		} else if (mq5_value < 2300 && sht_flag == 0 && fire_flag == 0 && buzzer_cmd == 0){
+			fan_on();
+		} else if (mq5_value < GAS_VALUE && sht_flag == 0 && fire_flag == 0 && buzzer_cmd == 0 && fan_cmd == 0){
+			if (mq5_flag == 1) {
+				mq5_flag = 0;
+				OLED_Clear();
+			}
 			buzzer_off();
+			fan_off();
 		}
 		
 		// 数码管显示
@@ -163,16 +183,16 @@ int main(void)
 		
 		// 整理及上传数据
 		led_on(1);
-		upload_sensor_data(SERVER_IP, "24", sht_data[0]); // 温度
+		upload_sensor_data(SERVER_IP, TMP_ID, sht_data[0]); // 温度
 		led_off(1);
 		delay_ms(200);
 		led_on(1);
-		upload_sensor_data(SERVER_IP, "25", sht_data[1]); // 湿度
+		upload_sensor_data(SERVER_IP, HUM_ID, sht_data[1]); // 湿度
 		led_off(1);
 		iwdg_feed_dog(); // 喂狗
 		delay_ms(200);
 		led_on(1);
-		upload_sensor_data(SERVER_IP, "26", mq5_value); // MQ5
+		upload_sensor_data(SERVER_IP, MQ5_ID, mq5_value); // MQ5
 		delay_ms(200);
 		led_off(1);
 		if(FAN_VALUE)

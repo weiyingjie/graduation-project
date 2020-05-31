@@ -46,6 +46,8 @@ extern void OLED_ShowHUm(u8 x, u8 y);//显示汉字湿度
 
 extern void OLED_ShowFIre(u8 x, u8 y);//显示汉字火焰
 
+extern void OLED_ShowGAs(u8 x, u8 y);//显示汉字气体
+
 extern void OLED_ShowTIttle(u8 x, u8 y);//显示摄氏度的符号
 
 extern void OLED_ShowCHinese(u8 x, u8 y);//显示汉字
